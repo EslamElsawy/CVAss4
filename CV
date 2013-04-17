@@ -5,7 +5,7 @@ import matplotlib.image as mpimg
 
 # Manually identifies corresponding points from two views
 def getCorrespondence(imageA, imageB):
-  # Display images, select matching points
+	# Display images, select matching points
 	fig = plt.figure()
 	figA = fig.add_subplot(1,2,1)
 	figB = fig.add_subplot(1,2,2)
@@ -88,3 +88,93 @@ print pold
 print pnew
 print pnew[0]/pnew[2];
 print pnew[1]/pnew[2];
+
+#Step 2: 
+print type(imageA)
+print imageA.shape
+print type(imageB)
+print imageB.shape
+BHieght=imageB.shape[0]
+BWidth=imageB.shape[1]
+imageBWidth = imageB.shape[1];
+imageBHeight = imageB.shape[0];
+#convert the conrner points
+#point 1
+print 'point 1'
+uleft = np.array([
+	[0],
+	[0],
+	[1]
+	]) 
+
+uleftnew = np.dot(H,uleft);
+uleftX= uleftnew[0]/uleftnew[2];
+uleftY= uleftnew[1]/uleftnew[2];
+#point 2
+print 'point 2'
+uright = np.array([
+	[0],
+	[imageBWidth],
+	[1]
+	])
+urightnew = np.dot(H,uright);
+urightX= urightnew[0]/urightnew[2]
+urightY= urightnew[1]/urightnew[2]
+#point 3
+print 'point 3'
+lleft = np.array([
+	[imageBHeight],
+	[0],
+	[1]
+	])
+lleftnew = np.dot(H,lleft);
+lleftX= lleftnew[0]/lleftnew[2];
+lleftY= lleftnew[1]/lleftnew[2];
+#point 4
+print 'point 4'
+lright = np.array([
+	[imageBHeight],
+	[imageBWidth],
+	[1]
+	])
+lrightnew = np.dot(H,lright);
+lrightX= lrightnew[0]/lrightnew[2];
+lrightY= lrightnew[1]/lrightnew[2];
+
+#calculate the size of the traslated image
+minX = int(min(uleftX,urightX,lleftX,lrightX));
+minY = int(min(uleftY,lleftY,urightY,lrightY));
+maxX = int (max(uleftX,urightX,lleftX,lrightX));
+maxY = int(max(uleftY,lleftY,urightY,lrightY));
+print 'corners'
+print int(minX);
+print int(minY);
+print int(maxX);
+print int(maxY);
+print 'Size'
+modBHeight= maxX-minX;
+modBWidth= maxY-minY;
+print modBHeight;
+print modBWidth;
+
+#Start forming image B'
+modB = np.zeros(shape=(modBHeight,modBWidth));
+HMatrix = np.asmatrix(H);
+print HMatrix
+print 'strat'
+for i in range(minX,maxX):
+	for j in range(minY,maxY):
+		pBnew = np.array([
+		[i],
+		[j],
+		[1]
+		]);
+		pBold = np.dot(HMatrix.I,pBnew);
+		pBX = int(pBold[0]/pBold[2]);
+		pBY = int(pBold[1]/pBold[2]);
+		if(pBX>=0 and pBX<BHieght and pBY>=0 and pBY<BWidth):
+			modB[i][j] 
+		
+
+print 'Finish'
+
